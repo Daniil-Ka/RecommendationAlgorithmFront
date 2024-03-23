@@ -1,0 +1,5 @@
+.idea/
+todo.txt
+venv/
+core/.env
+*.log

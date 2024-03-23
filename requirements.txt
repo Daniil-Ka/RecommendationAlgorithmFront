@@ -1,0 +1,13 @@
+django
+django-admin-oauth2
+django-environ
+djangorestframework
+drf_spectacular
+django-simple-history
+django-debug-toolbar
+django-bootstrap5
+
+psycopg2-binary
+
+undetected-chromedriver
+pandas
