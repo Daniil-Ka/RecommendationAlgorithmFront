@@ -110,7 +110,7 @@ def main():
         total_count = 0
         titles = set()
         for st in mood_stations: # 18 станций
-            count = 50
+            count = 100
             print(datetime.datetime.now())
             for track in get_station_iterator(client, st):
                 try:
@@ -127,8 +127,6 @@ def main():
                 if count < 1:
                     break
                 print(total_count)
-
-
 
 
 

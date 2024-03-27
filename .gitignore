@@ -1,5 +1,5 @@
 .idea/
 todo.txt
 venv/
-core/.env
+.env
 *.log
