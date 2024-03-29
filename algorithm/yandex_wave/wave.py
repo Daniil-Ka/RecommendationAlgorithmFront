@@ -23,14 +23,12 @@ class Wave:
         _station_from = station.id_for_from
         self.current_track = self.radio.start_radio(_station_id, _station_from)
 
-    def next_track_url(self):
+    def next_track_id(self):
         if len(self.story_ids) == 0:
             self.story_ids.append(self.current_track.track_id)
-            url = self.current_track.get_download_info(get_direct_links=True)[0]['direct_link']
-            return url
+            return self.current_track.track_id
+            #get_download_info(get_direct_links=True)[0]['direct_link']
 
         self.story_ids.append(self.current_track.track_id)
         self.current_track = self.radio.play_next()
-        url = self.current_track.get_download_info(get_direct_links=True)[0]['direct_link']
-        return url
-
+        return self.current_track.track_id
