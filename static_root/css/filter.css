@@ -1,0 +1,120 @@
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome, Edge, Opera and Firefox */
+}
+
+.andor-button {
+    position: relative;
+    width: 60px;
+    height: 26px;
+    background-color: #46AFBD;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+    border: none;
+    border-radius: 13px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 225ms ease-out;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.andor-button:hover {
+    background-color: #399CA9;
+}
+
+.andor-button:focus {
+    outline: none;
+}
+
+.andor-button__and,
+.andor-button__or {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    height: 26px;
+    line-height: 26px;
+    transition: all 225ms ease-out;
+}
+
+.andor-button__or {
+    transform: translateY(100%);
+}
+
+.andor-button__icon {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 8px;
+    height: 12px;
+    transition: all 375ms ease-in-out;
+}
+
+.andor-button__and {
+    margin-left: 10px;
+}
+
+/* Toggle AND/OR */
+.andor-button.active .andor-button__and {
+    transform: translateY(-100%);
+}
+
+.andor-button.active .andor-button__or {
+    transform: translateY(0);
+}
+
+.andor-button.active .andor-button__icon {
+    transform: rotate(180deg);
+}
+
+.filter {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.option {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.selected-option {
+    background-color: lightblue;
+}
+
+.option:hover {
+    background-color: #f0f0f0;
+}
+
+.selected-option:hover {
+    background-color: deepskyblue;
+}

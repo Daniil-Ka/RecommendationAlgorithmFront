@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фильтр</title>
+    <script src={% static 'js/jquery.js' %}></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/filter.css' %}">
+</head>
+<body>
+
+<div class="filter">
+    <div class="filter-row">
+        <span>Заголовок</span>
+
+        <button class="andor-button">
+            <span class="andor-button__and"> И </span>
+            <span class="andor-button__or">ИЛИ</span>
+            <span class="andor-button__icon">
+                <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="Display-Scenario---Advanced-tab-Copy" transform="translate(-129, -208)" fill="#FFFFFF" opacity="0.5">
+                    <polygon id="Path-30-Copy-6" points="129 215 137 215 133 220"></polygon>
+                    <polygon id="Path-30-Copy-11" transform="translate(133, 210) scale(1, -1) translate(-133, -210)"
+                             points="129 208 137 208 133 213"></polygon>
+                    </g>
+                </svg>
+            </span>
+        </button>
+    </div>
+    <div class="filter-row">
+        <input type="text" class="search-input" placeholder="Поиск...">
+    </div>
+    <div class="filter-row">
+        <div class="filter-options">
+            <!-- Выбранные элементы будут добавляться сюда -->
+        </div>
+    </div>
+</div>
+
+<script src={% static 'js/filter.js' %}></script>
+<script>
+    $(document).ready(function () {
+            $('.andor-button').click(function () {
+                $(this).toggleClass('active')
+            });
+        }
+    );
+</script>
+</body>
+</html>
