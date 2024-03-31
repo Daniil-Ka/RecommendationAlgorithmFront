@@ -91,6 +91,7 @@ body {
 }
 
 .line {
+	display: none;
 	position: fixed;
 	left: 50vw;
 	width: 2px;
@@ -454,6 +455,7 @@ body {
 }
 
 .playback_timeline_start-time, .playback_timeline_end-time {
+	width: 35px;
 	font-size: 14px;
 	opacity: 0.4;
 	margin-right: 15px;
@@ -482,7 +484,6 @@ body {
 }
 
 .playback_timeline_slider .slider_progress {
-	transform: matrix(0.15812, 0, 0, 1, 0, 0);
 	transform-origin: 0 0;
 	width: 100%;
 	height: 2px;
@@ -493,14 +494,13 @@ body {
 }
 
 .playback_timeline_slider .slider_handle {
-	transform: matrix(1, 0, 0, 1, 37, 0);
+	transform: matrix(1, 0, 0, 1, -6, 0);
 	width: 12px;
 	height: 12px;
 	background-color: #252120;
 	border-radius: 50%;
 	position: absolute;
 	top: 7px;
-	left: -6px;
 }
 
 .list_wrapper {
@@ -777,4 +777,15 @@ body {
 
 .shadow {
 	box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.4);
+}
+
+* {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome, Edge, Opera and Firefox */
 }

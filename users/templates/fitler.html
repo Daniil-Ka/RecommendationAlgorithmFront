@@ -5,16 +5,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фильтр</title>
+    <title>Фильтры</title>
     <script src={% static 'js/jquery.js' %}></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/filter.css' %}">
 </head>
 <body>
 
-<div class="filter">
+{% for title in titles %}
+<div class="filter" id="filter{{ forloop.counter }}">
     <div class="filter-row">
-        <span>Заголовок</span>
+        <span>{{ title }}</span>
 
         <button class="andor-button">
             <span class="andor-button__and"> И </span>
@@ -40,7 +41,12 @@
         </div>
     </div>
 </div>
+{% endfor %}
 
+<script>
+    var filters = {{ filters|safe }};
+    console.log(filters)
+</script>
 <script src={% static 'js/filter.js' %}></script>
 <script>
     $(document).ready(function () {
