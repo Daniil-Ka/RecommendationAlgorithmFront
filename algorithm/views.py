@@ -61,7 +61,7 @@ def upload(request):
 
 def get_track_model_by_id(id, client=None):
     if client is None:
-        client = Client(token = os.getenv("YANDEX_MUSIC_TOKEN"))
+        client = Client(token=os.getenv("YANDEX_MUSIC_TOKEN")).init()
     track_obj = client.tracks(id)[0]
 
     track = Track(
