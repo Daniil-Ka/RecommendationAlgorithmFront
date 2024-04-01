@@ -23,15 +23,13 @@
     </div>
     <div class="nav">
         <ul class="nav_main">
-            <li> <a class="nav_link">Home	</a></li>
-            <li> <a class="nav_link">Listeners</a></li>
-            <li> <a class="nav_link">Compilations</a></li>
-            <li> <a class="nav_link">LP. Mix</a></li>
+            <li> <a class="nav_link">Главная</a></li>
+            <li> <a class="nav_link">Для музыкантов</a></li>
         </ul>
         <div class="nav_divider"></div>
         <ul class="nav_sub">
-            <li><a class="nav_link" href="">About	</a></li>
-            <li><a class="nav_link" href="">Contact	</a></li>
+            <li><a class="nav_link" href="">О нас</a></li>
+            <li><a class="nav_link" href="">Документация</a></li>
         </ul>
     </div>
     <div class="mini-player">
@@ -44,8 +42,12 @@
                 </div>
             </div>
         </div>
-        <div class="mini-player_btn_wrapper"><i class="btn-prev fa fa-step-backward" aria-hidden="true"></i>
-            <div class="btn-switch"><i class="btn-play fa fa-play" aria-hidden="true"></i><i class="btn-pause fa fa-pause" aria-hidden="true"></i></div><i class="btn-next fa fa-step-forward" aria-hidden="true"></i><i class="btn-open-player fa fa-list" aria-hidden="true"></i></div>
+        <div class="mini-player_btn_wrapper"><i class="btn-prev fa fa-step-backward disabled" aria-hidden="true"></i>
+            <div class="btn-switch">
+                <i class="btn-play fa fa-play" aria-hidden="true"></i>
+                <i class="btn-pause fa fa-pause" aria-hidden="true" style="display: none;"></i>
+            </div>
+            <i class="btn-next fa fa-step-forward" aria-hidden="true"></i><i class="btn-open-player fa fa-list" aria-hidden="true"></i></div>
     </div>
     <div class="dim"></div>
     <div class="player" id="player">
@@ -56,8 +58,12 @@
                 <div class="title">Friday Comes</div>
                 <div class="artist">Early</div>
             </div>
-            <div class="playback_btn_wrapper"><i class="btn-prev fa fa-step-backward" aria-hidden="true"></i>
-                <div class="btn-switch"><i class="btn-play fa fa-play" aria-hidden="true"></i><i class="btn-pause fa fa-pause" aria-hidden="true"></i></div><i class="btn-next fa fa-step-forward" aria-hidden="true"></i></div>
+            <div class="playback_btn_wrapper"><i class="btn-prev fa fa-step-backward disabled" aria-hidden="true"></i>
+                <div class="btn-switch">
+                    <i class="btn-play fa fa-play" aria-hidden="true"></i>
+                    <i class="btn-pause fa fa-pause" aria-hidden="true" style="display: none;"></i>
+                </div>
+                <i class="btn-next fa fa-step-forward" aria-hidden="true"></i></div>
             <div class="playback_timeline">
                 <div class="playback_timeline_start-time">00:31</div>
                 <div class="playback_timeline_slider">

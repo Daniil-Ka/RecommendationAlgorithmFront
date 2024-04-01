@@ -789,3 +789,9 @@ body {
     /* Non-prefixed version, currently
                                      supported by Chrome, Edge, Opera and Firefox */
 }
+
+.btn-prev.disabled {
+  opacity: 0.2;
+  cursor: not-allowed; /* Запрет изменения курсора при наведении */
+  pointer-events: none; /* Запрет кликов и событий мыши */
+}

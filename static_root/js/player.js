@@ -58,14 +58,18 @@ $('.dim').click(function () {
 
 // ===== Переключатель воспроизведения/паузы мини-плеера =====
 var audioPlayer = new Audio();
-audioPlayer.src = '/static/audio/audio.mp3';
+audioPlayer.src = 'https://s38vlx.storage.yandex.net/get-mp3/44bc9c96cc70611797ac5016ba9784b3/000614f8536d7137/rmusic/U2FsdGVkX1_U2rW4X_hbzglz4bL5MC2Ei2GlMQrVC-xDUD7RTh4bG2QLTbWs1Z_VVGTNWGS3o6N4a3erY_RNwdxHwsDjDmQzL-nEtdetWWk/61545f714b4da8c6636729a6b207684555758cf64e5439480b736555c5ba271e/33283';
 
 audioPlayer.onloadedmetadata = function() {
   console.log(audioPlayer.duration);
   console.log(audioPlayer.currentTime);
 };
 
-function updateSliderPosition() {
+audioPlayer.ended = function () {
+    console.log('Закончился')
+}
+
+function updateSliderPositionByTime() {
     // Получаем общую продолжительность трека
     var duration = audioPlayer.duration;
 
@@ -102,15 +106,50 @@ audioPlayer.ontimeupdate = function() {
 
     // Выводим текущее время воспроизведения аудио
     console.log(`Текущее время: ${currentMinutes}:${currentSeconds}`);
-    updateSliderPosition();
+    updateSliderPositionByTime();
+
+    if (duration - currentTime < 5) {
+        // трек скоро закончится
+        console.log('трек скоро закончится')
+    }
 };
 
+// Флаг для отслеживания состояния зажатой кнопки мыши
+var isDragging = false;
+
 $('.playback_timeline_slider').on('mousedown', function(event) {
+    // Устанавливаем флаг isDragging в true при нажатии кнопки мыши
+    isDragging = true;
+
+    // Вызываем функцию для обновления позиции ползунка при нажатии
+    updateSliderPosition(event);
+});
+
+// Добавляем обработчик события mousemove к документу
+$(document).on('mousemove', function(event) {
+    // Проверяем, зажата ли кнопка мыши
+    if (isDragging) {
+        // Вызываем функцию для обновления позиции ползунка при перемещении мыши
+        updateSliderPosition(event);
+    }
+});
+
+// Добавляем обработчик события mouseup к документу
+$(document).on('mouseup', function() {
+    // Сбрасываем флаг isDragging в false при отпускании кнопки мыши
+    if (isDragging) {
+        startPlay();
+    }
+    isDragging = false;
+});
+
+// Функция для обновления позиции ползунка и времени воспроизведения
+function updateSliderPosition(event) {
     // Получаем ширину ползунка
-    var sliderWidth = $(this).width();
+    var sliderWidth = $('.playback_timeline_slider').width();
 
     // Рассчитываем относительную позицию курсора в пределах ползунка
-    var relativePosition = event.clientX - $(this).offset().left;
+    var relativePosition = event.clientX - $('.playback_timeline_slider').offset().left;
 
     // Рассчитываем новое время воспроизведения на основе относительной позиции курсора
     var newTime = (relativePosition / sliderWidth) * audioPlayer.duration;
@@ -122,17 +161,26 @@ $('.playback_timeline_slider').on('mousedown', function(event) {
 
     // Устанавливаем новое время воспроизведения аудио
     audioPlayer.currentTime = newTime;
-});
+}
+
+function startPlay() {
+    if (audioPlayer.duration > 0 && !audioPlayer.paused) {
+        // же играет
+    }
+    else {
+        // Анимация скрытия кнопки play
+        TweenMax.to($('.btn-play'), 0.2, {x: 20, opacity: 0, scale: 0.3, display: 'none', ease: Power2.easeInOut});
+        // Анимация появления кнопки pause
+        TweenMax.fromTo($('.btn-pause'), 0.2, {x: -20, opacity: 0, scale: 0.3, display: 'none'},
+            {x: 0, opacity: 1, scale: 1, display: 'block', ease: Power2.easeInOut});
+    }
+
+    audioPlayer.play();
+    console.log('play');
+}
 
 $('.btn-play').click(function () {
-    // Анимация скрытия кнопки play
-    TweenMax.to($('.btn-play'), 0.2, {x: 20, opacity: 0, scale: 0.3, display: 'none', ease: Power2.easeInOut});
-    // Анимация появления кнопки pause
-    TweenMax.fromTo($('.btn-pause'), 0.2, {x: -20, opacity: 0, scale: 0.3, display: 'none'},
-        {x: 0, opacity: 1, scale: 1, display: 'block', ease: Power2.easeInOut});
-    console.log('start')
-
-    audioPlayer.play()
+    startPlay();
 });
 
 $('.btn-pause').click(function () {
@@ -141,26 +189,59 @@ $('.btn-pause').click(function () {
     // Анимация появления кнопки play
     TweenMax.fromTo($('.btn-play'), 0.2, {x: -20, opacity: 0, scale: 0.3, display: 'none'},
         {x: 0, opacity: 1, display: 'block', scale: 1, ease: Power2.easeInOut});
-    console.log('pause')
 
     audioPlayer.pause()
 });
 
+songsHistory = []
+
+function loadSong(songData) {
+    let image = 'url(' + songData.image + ')';
+    let download_url = songData.download_url;
+    let release_date = songData.release_date;
+
+    $('.title').text(songData.title)
+    $('.artist').text(songData.artist)
+    $('.playback_thumb').css('background-image', image);
+    $('.playback_blur').css('background-image', image);
+    $('.thumb').css('background-image', image);
+
+    audioPlayer.src = download_url;
+    audioPlayer.currentTime = 0;
+    startPlay();
+}
+
 $('.btn-prev').click(function () {
-    console.log('prev')
+    songsHistory.pop();
+    let last = songsHistory[songsHistory.length - 1];
+    loadSong(last)
+
+    if (songsHistory.length <= 1) {
+
+    }
 
     TweenMax.to($(this), 0.1, {scale: 0.8, ease: Power2.easeInOut});
     // Возвращаем кнопку в исходный размер
     TweenMax.to($(this), 0.1, {delay: 0.1, scale: 1, ease: Power2.easeInOut});
 })
 
-$('.btn-next').click(function () {
-    console.log('next')
-
+$('.btn-next').on('click', async function() {
     TweenMax.to($(this), 0.15, {scale: 0.7});
     // Возвращаем кнопку в исходный размер
     TweenMax.to($(this), 0.15, {delay: 0.1, scale: 1});
-})
+
+    try {
+        // Отправляем GET запрос на сервер и дожидаемся ответа
+        const response = await fetch('/algorithm/next');
+
+        // Обрабатываем JSON и получаем объект с полями
+        const jsonData = await response.json();
+        songsHistory.push(jsonData);
+        loadSong(jsonData);
+    } catch (error) {
+        console.error('Произошла ошибка:', error);
+    }
+});
 
 
 // ===== Эффект мерцания при наведении/покидании курсора на различные элементы =====
