@@ -94,6 +94,9 @@ audioPlayer.ontimeupdate = function() {
     const currentSeconds = Math.floor(currentTime % 60);
 
     currentTimeText = String(currentMinutes).padStart(2, "0") + ':' + String(currentSeconds).padStart(2, "0");
+    if (isNaN(currentTime)) {
+        currentTimeText = 'Загрузка'
+    }
     $('.playback_timeline_start-time').text(currentTimeText);
 
     // Преобразуем текущее время из секунд в формат минут:секунды
