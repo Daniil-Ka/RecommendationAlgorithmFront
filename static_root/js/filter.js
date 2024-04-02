@@ -1,5 +1,31 @@
-console.log(filters)
 $(document).ready(function () {
+    let AllSelectedOptions = []
+
+    // отправка данных фильтра
+    $('#submit-button').click(function () {
+        const selectedTime = $("#time-select").val();
+        const excludeProfanity = $("#profanity").is(":checked");
+        const excludeRestricted = $("#exclude-restricted").is(":checked");
+
+        $.ajax({
+            url: "/send-data",
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                filters: AllSelectedOptions,
+                time: selectedTime,
+                profanity: excludeProfanity,
+                exclude_restricted: excludeRestricted
+            }),
+            success: function(data) {
+            console.log("Ответ от сервера:", data);
+            },
+            error: function() {
+            console.error("Произошла ошибка при отправке запроса");
+            }
+        });
+    });
+
     $('.filter').each(function (index) {
         var $filter = $(this);
         var $searchInput = $filter.find('.search-input');
@@ -8,6 +34,7 @@ $(document).ready(function () {
 
         var allOptions = options.slice(); // Создаем копию исходного списка
         var selectedOptions = []; // Массив для хранения выбранных элементов
+        AllSelectedOptions.push({filter: $filter.find('.filter-title').text(), selected: selectedOptions})
 
         function addOptionToFilter(optionText) {
             var optionElement = $('<div class="option">' + optionText + '</div>');

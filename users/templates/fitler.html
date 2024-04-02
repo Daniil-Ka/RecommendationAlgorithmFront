@@ -12,10 +12,11 @@
 </head>
 <body>
 
+<!-- 4 Фильтра -->
 {% for title in titles %}
 <div class="filter" id="filter{{ forloop.counter }}">
     <div class="filter-row">
-        <span>{{ title }}</span>
+        <span class="filter-title">{{ title }}</span>
 
         <button class="andor-button">
             <span class="andor-button__and"> И </span>
@@ -23,7 +24,7 @@
             <span class="andor-button__icon">
                 <svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg"
                      xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g id="Display-Scenario---Advanced-tab-Copy" transform="translate(-129, -208)" fill="#FFFFFF" opacity="0.5">
+                    <g transform="translate(-129, -208)" fill="#FFFFFF" opacity="0.5">
                     <polygon id="Path-30-Copy-6" points="129 215 137 215 133 220"></polygon>
                     <polygon id="Path-30-Copy-11" transform="translate(133, 210) scale(1, -1) translate(-133, -210)"
                              points="129 208 137 208 133 213"></polygon>
@@ -43,9 +44,23 @@
 </div>
 {% endfor %}
 
+<select id="time-select">
+  <option value="<2">Менее 2 минут</option>
+  <option value="<5">Менее 5 минут</option>
+  <option value="any">Не имеет значения</option>
+</select>
+
+<br>
+
+<input type="checkbox" id="profanity" name="profanity">
+<label for="profanity">Ненормативная лексика</label><br>
+<input type="checkbox" id="exclude-restricted" name="exclude-restricted">
+<label for="exclude-restricted">Ограниченное содержание</label><br>
+
+<button id="submit-button">Принять</button>
+
 <script>
     var filters = {{ filters|safe }};
-    console.log(filters)
 </script>
 <script src={% static 'js/filter.js' %}></script>
 <script>

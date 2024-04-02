@@ -1,16 +1,7 @@
-import csv
-import os
-
-from django.http import JsonResponse, HttpResponse
 import uuid
-
-from yandex_music import Client
-
-from .yandex_wave import wave, moods
-from .music.models import Track
+from django.http import JsonResponse
 from .music.serializers import TrackSerializer
-
-from datetime import timedelta, datetime
+from .yandex_wave import wave, moods
 
 users_waves = {}
 
