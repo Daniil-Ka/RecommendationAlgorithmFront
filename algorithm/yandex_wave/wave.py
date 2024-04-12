@@ -6,6 +6,7 @@ from time import sleep
 from ..music.models import Track
 from datetime import datetime, timedelta
 import os
+from pprint import pprint
 class Wave:
     story_tracks_ids = []
     user_id = None
@@ -22,6 +23,7 @@ class Wave:
         stations = self.client.rotor_stations_list()
         station = None
         for i in stations:
+            print(i.station.id)
             if i.station.id.type == "mood" and i.station.id.tag == mood.value:
                 station = i.station
 
