@@ -97,4 +97,8 @@ $(document).ready(function () {
         });
         displaySelectedOptions();
     });
+
+    $('.andor-button').click(function () {
+        $(this).toggleClass('active')
+    });
 });
