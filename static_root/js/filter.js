@@ -21,7 +21,7 @@ $(document).ready(function () {
             console.log("Ответ от сервера:", data);
             },
             error: function() {
-            console.error("Произошла ошибка при отправке запроса");
+            console.error("Error");
             }
         });
     });
