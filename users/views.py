@@ -2,16 +2,9 @@ import json
 from django.shortcuts import render
 
 
-def index(request):
-    context = {
-        'data': 'a',  # Передайте данные в шаблон
-    }
+def generate_filters() -> dict:
+    """ Создать заголовки и значения для фильтров """
 
-    # Верните ответ с использованием шаблона и контекста
-    return render(request, 'index.html', context)
-
-
-def filter(request):
     titles = ["Жанры", "Язык", "Настроение", "На кого похоже"]
 
     genres = [
@@ -32,4 +25,9 @@ def filter(request):
         'filters': json.dumps(filters)
     }
 
-    return render(request, 'fitler.html', context)
+    return context
+
+def index(request):
+    context = generate_filters()
+    # Верните ответ с использованием шаблона и контекста
+    return render(request, 'index.html', context)

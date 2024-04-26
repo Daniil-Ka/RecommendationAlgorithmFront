@@ -503,7 +503,7 @@ body {
 	top: 7px;
 }
 
-.list_wrapper {
+.filter_wrapper {
 	height: calc(100% - 310px);
 	overflow: auto;
 }

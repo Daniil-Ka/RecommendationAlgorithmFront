@@ -1,16 +1,4 @@
-<!DOCTYPE html>
 {% load static %}
-
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фильтры</title>
-    <script src={% static 'js/jquery.js' %}></script>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/filter.css' %}">
-</head>
-<body>
 
 <!-- 4 Фильтра -->
 {% for title in titles %}
@@ -44,7 +32,7 @@
 </div>
 {% endfor %}
 
-<select id="time-select">
+<select id="time-select" class="filter-element">
   <option value="<2">Менее 2 минут</option>
   <option value="<5">Менее 5 минут</option>
   <option value="any">Не имеет значения</option>
@@ -52,24 +40,14 @@
 
 <br>
 
-<input type="checkbox" id="profanity" name="profanity">
+<input type="checkbox" id="profanity" name="profanity" class="filter-element checkbox-input">
 <label for="profanity">Ненормативная лексика</label><br>
-<input type="checkbox" id="exclude-restricted" name="exclude-restricted">
+<input type="checkbox" id="exclude-restricted" name="exclude-restricted" class="filter-element checkbox-input">
 <label for="exclude-restricted">Ограниченное содержание</label><br>
 
-<button id="submit-button">Принять</button>
+<button id="submit-button" class="filter-element">Применить фильтры</button>
 
 <script>
     var filters = {{ filters|safe }};
 </script>
-<script src={% static 'js/filter.js' %}></script>
-<script>
-    $(document).ready(function () {
-            $('.andor-button').click(function () {
-                $(this).toggleClass('active')
-            });
-        }
-    );
-</script>
-</body>
-</html>
+<script src="{% static 'js/filter.js' %}" defer></script>

@@ -107,3 +107,24 @@
 .selected-option:hover {
     background-color: deepskyblue;
 }
+
+.filter_div {
+    text-align: center;
+
+    width: fit-content;
+
+    right: 50%;
+    bottom: 50%;
+    transform: translate(50%,20%);
+
+}
+
+.filter_wrapper {
+    width: 640px; /* Can be in percentage also. */
+    position: relative;
+
+}
+
+.filter-element {
+    margin-bottom: 10px;
+}
