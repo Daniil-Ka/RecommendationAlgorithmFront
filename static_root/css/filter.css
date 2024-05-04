@@ -2,7 +2,7 @@
     position: relative;
     width: 60px;
     height: 26px;
-    background-color: #46AFBD;
+    background-color: #18DFAD;
     color: #fff;
     font-size: 12px;
     font-weight: bold;
@@ -115,7 +115,7 @@
 
     right: 50%;
     bottom: 50%;
-    transform: translate(50%,20%);
+    transform: translate(50%, 10%);
 
 }
 
@@ -127,4 +127,8 @@
 
 .filter-element {
     margin-bottom: 10px;
+}
+
+.filter-title {
+    font-size: 1.6em;
 }

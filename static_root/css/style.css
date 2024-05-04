@@ -123,10 +123,10 @@ body {
 
 .main-btn_wrapper {
 	position: absolute;
-	right: -25%;
-	top: calc(50% - 18px);
-	width: 36px;
-	height: 36px;
+	right: calc(50% - 108px);
+	top: calc(50% - 108px);
+	width: 216px;
+	height: 216px;
 	background-color: #fff9e1;
 	border-radius: 50%;
 	text-align: center;
@@ -134,6 +134,11 @@ body {
 	opacity: 0;
 	transform: scale(0);
 	transform-origin: bottom;
+}
+
+.main-btn_wrapper > .fa-play {
+	margin-top: calc(108px - 16px);
+	scale: 4;
 }
 
 .main-btn_wrapper .main-btn {

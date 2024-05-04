@@ -7,6 +7,8 @@ $(document).ready(function () {
         const excludeProfanity = $("#profanity").is(":checked");
         const excludeRestricted = $("#exclude-restricted").is(":checked");
 
+        console.log($("#search-input1").tokenInput("get"))
+
         $.ajax({
             url: "/send-data",
             type: 'POST',
@@ -101,4 +103,35 @@ $(document).ready(function () {
     $('.andor-button').click(function () {
         $(this).toggleClass('active')
     });
+});
+
+// =================================
+
+
+$(document).ready(function () {
+    $("#search-input1").tokenInput([
+    { id: 0, name: "english" },
+    { id: 1, name: "spanish" },
+    { id: 2, name: "french" }
+    // Добавьте другие варианты языков по вашему усмотрению
+  ], {
+        theme: "facebook",
+        hintText: "Поиск...",
+        searchingText: "Поиск...",
+        noResultsText: "Ничего не найдено",
+        resultsLimit: 10,
+        preventDuplicates: true,
+        tokenLimit: 5,
+
+        onResult: function(results) {
+              // Фильтрация уже выбранных языков из результатов
+            var filteredResults = results.filter(function(result) {
+                var selectedLanguages = $('#search-input1').val() || [];
+                return !selectedLanguages.includes(result.id);
+            });
+            return filteredResults;
+        }
+    }
+    );
+    //$("#filter1").tokenInput("/users/autocomplete");
 });

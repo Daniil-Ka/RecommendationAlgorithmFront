@@ -295,6 +295,11 @@ $('.list_item').click(function () {
 // ===== Эффект при наведении на главную кнопку плеера =====
 $('.text-wrap .text').hover(function () {
         // Анимация появления обертки главной кнопки плеера
+
+        TweenMax.to($('.text-wrap-letter'), 0.2, {
+            opacity: 0,
+        })
+
         TweenMax.to($('.main-btn_wrapper'), 0.5, {
             opacity: 1,
             display: 'block',
@@ -302,10 +307,16 @@ $('.text-wrap .text').hover(function () {
             scale: 1,
             ease: Elastic.easeOut.config(1, 0.75)
         })
+
+
     },
 
     function () {
         // Анимация скрытия обертки главной кнопки плеера
+        TweenMax.to($('.text-wrap-letter'), 0.2, {
+            opacity: 1,
+        })
+
         TweenMax.to($('.main-btn_wrapper'), 0.5, {
             opacity: 0,
             display: 'none',
