@@ -17,8 +17,3 @@ yandex_music
 
 undetected-chromedriver
 pandas
-
-vk_api
-vk_audio
-lxml
-beautifulsoup4

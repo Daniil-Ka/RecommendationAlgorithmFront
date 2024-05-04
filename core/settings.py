@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-1)a0y%p6gvx(h6+))h0aq96v%gc$1%shej&(q551@kb))a@2in'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'test.aurit-ural.ru']
 
 STATIC_URL = 'static/'
 STATIC_ROOT = 'static_root'
