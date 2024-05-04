@@ -132,3 +132,25 @@
 .filter-title {
     font-size: 1.6em;
 }
+
+#submit-button {
+    position: relative;
+    background-color: #18DFAD;
+    color: #fff;
+    font-size: 1em;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+    border: none;
+    border-radius: 13px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 225ms ease-out;
+    margin-left: auto;
+    margin-right: 0;
+    padding: 7px;
+    margin-top: 5px;
+}
+
+#submit-button:hover {
+    background-color: #15cda0;
+}
