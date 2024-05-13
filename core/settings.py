@@ -3,12 +3,11 @@ import environ
 
 
 env = environ.Env()
-print(env)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-1)a0y%p6gvx(h6+))h0aq96v%gc$1%shej&(q551@kb))a@2in'
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', 'test.aurit-ural.ru']
+ALLOWED_HOSTS = ['localhost', 'test.aurit-ural.ru', '127.0.0.1']
 
 STATIC_URL = 'static/'
 STATIC_ROOT = 'static_root'
@@ -21,6 +20,7 @@ LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

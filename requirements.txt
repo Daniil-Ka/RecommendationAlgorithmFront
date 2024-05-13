@@ -17,3 +17,4 @@ yandex_music
 
 undetected-chromedriver
 pandas
+scikit-learn
