@@ -30,6 +30,5 @@ class Model:
         probabilities = cls.model.predict_proba(input_data)
         top_indices = (-probabilities[0]).argsort()[:top_n][1:]
         top_artists = [cls.model.classes_[idx] for idx in top_indices]
-
         return top_artists
 

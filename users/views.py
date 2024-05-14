@@ -52,8 +52,8 @@ class BaseFilterView(APIView):
 class GenreFilterView(BaseFilterView):
     def filter(self, query: str) -> List[Dict]:
         genres = [
-            "блюз", "вокальная музыка", "гранж", "джаз", "инструментальная музыка", "кантри", "классика",
-            "этническая музыка", "рок", "ска", "техно", "панк", "фолк", "хип-хоп", "шансон"
+            "блюз", "вокальная музыка", "джаз", "инструментальная музыка", "кантри", "классика",
+            "этническая музыка", "рок", "ска", "техно", "панк", "фолк", "хип-хоп", "шансон", "рэп", 'поп'
         ]
 
         return [{'id': i, 'name': element} for i, element in enumerate(genres) if query.lower() in element.lower()]

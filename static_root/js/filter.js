@@ -60,7 +60,7 @@ $(document).ready(function () {
         });
 
         $.ajax({
-            url: "/send-data",
+            url: "/algorithm/apply_filters/",
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -69,6 +69,9 @@ $(document).ready(function () {
                 profanity: excludeProfanity,
                 exclude_restricted: excludeRestricted
             }),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+             },
             success: function(data) {
             console.log("Ответ от сервера:", data);
             },
@@ -78,3 +81,8 @@ $(document).ready(function () {
         });
     });
 });
+
+function getCookie(name) {
+	var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+	return matches ? decodeURIComponent(matches[1]) : undefined;
+}

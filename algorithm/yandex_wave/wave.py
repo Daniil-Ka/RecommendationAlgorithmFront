@@ -1,3 +1,4 @@
+import itertools
 import time
 from typing import Any, Tuple, Type
 
@@ -13,13 +14,15 @@ from ..recomendation_model import Model
 
 
 class Wave:
-    def __init__(self, user_id, genre, language, max_duration, is_explict):
+    def __init__(self, user_id, genres: list, languages: list, max_duration, is_explict):
         self.user_id = user_id
 
-        self.genre = genre
-        self.language = language
-        self.max_duration = max_duration
-        self.is_explict = is_explict
+        self.genres = genres
+        self.languages = languages
+        self.max_duration = timedelta(milliseconds=max_duration)
+        self.is_explict = [False]
+        if is_explict:
+            self.is_explict.append(is_explict)
 
         self.client = Client(token=os.getenv("YANDEX_MUSIC_TOKEN")).init()
 
@@ -29,50 +32,73 @@ class Wave:
         self.generate_thread.start()
 
     def __generate_playlist(self):
-        artists = Model.predict_artists(self.genre, self.language)
-        dur = timedelta(milliseconds=self.max_duration)
+        print(self.is_explict)
+        # first = Track.objects.filter(
+        #     genre__in=self.genres,
+        #     language__in=self.languages,
+        #     is_explict__in=self.is_explict,
+        #     duration__lt=self.max_duration,
+        # ).order_by('?').first()
+        # self.next_dicts.append(self.get_dict_from_model(first))
 
-        first = Track.objects.filter(genre=self.genre, language=self.language, is_explict=self.is_explict).first()
-        self.next_dicts.append(self.get_dict_from_model(first))
+        firsts = Track.objects.filter(
+                genre__in=self.genres,
+                language__in=self.languages,
+                is_explict__in=self.is_explict,
+                duration__lt=self.max_duration,
+            ).order_by('?')
 
-        all = Track.objects.all()
-        tracks_predicted = filter(
-            lambda t:
-            t.artist in artists and
-            t.duration < dur and
-            t.is_explict <= self.is_explict,
-            all
-        )
-        c = 0
-        for model in tracks_predicted:
+        for model in firsts:
             while len(self.next_dicts) > 10:
                 time.sleep(1)
-            self.next_dicts.append(self.get_dict_from_model(model))
-            c += 1
+            try:
+                self.next_dicts.append(self.get_dict_from_model(model))
+            except:
+                continue
 
-        print('END PREDICTED ', c)
-        other_tracks = filter(
-            lambda t:
-            t.artist not in artists and
-            t.duration < dur and
-            t.is_explict <= self.is_explict and
-            t.genre == self.genre and
-            (t.language == 'ru') == (self.language == 'ru'),
-            all
+        artists = set()
+        for g in self.genres:
+            for lang in self.languages:
+                for a in Model.predict_artists(g, lang):
+                    artists.add(a)
+        for i in artists:
+            print(i.encode('utf-8'))
+
+        predicted_tracks = Track.objects.filter(
+            artist__in=artists,
+            is_explict__in=self.is_explict,
+            duration__lt=self.max_duration
         )
 
-        c = 0
+        for model in predicted_tracks:
+            while len(self.next_dicts) > 10:
+                time.sleep(1)
+            try:
+                self.next_dicts.append(self.get_dict_from_model(model))
+            except:
+                continue
+
+        print('END PREDICTED ')
+
+        other_tracks = Track.objects.filter(
+            genre__in=self.genres,
+            language__in=self.languages,
+            is_explict__in=self.is_explict,
+            duration__lt=self.max_duration
+        )
         for model in other_tracks:
             while len(self.next_dicts) > 10:
                 time.sleep(1)
-            self.next_dicts.append(self.get_dict_from_model(model))
-            c += 1
+            try:
+                self.next_dicts.append(self.get_dict_from_model(model))
+            except:
+                continue
 
-        print('END OTHER ', c)
+        print('END OTHER ')
 
     def next(self):
         while len(self.next_dicts) == 0:
-            time.sleep(0.5)
+            time.sleep(0.1)
 
         d = self.next_dicts.pop(0)
         self.story.append(d)
