@@ -1,4 +1,5 @@
 import itertools
+import sys
 import time
 from typing import Any, Tuple, Type
 
@@ -32,37 +33,15 @@ class Wave:
         self.generate_thread.start()
 
     def __generate_playlist(self):
-        print(self.is_explict)
-        # first = Track.objects.filter(
-        #     genre__in=self.genres,
-        #     language__in=self.languages,
-        #     is_explict__in=self.is_explict,
-        #     duration__lt=self.max_duration,
-        # ).order_by('?').first()
-        # self.next_dicts.append(self.get_dict_from_model(first))
+        first = Track.objects.filter(
+            genre__in=self.genres,
+            language__in=self.languages,
+            is_explict__in=self.is_explict,
+            duration__lt=self.max_duration,
+        ).order_by('?').first()
+        self.next_dicts.append(self.get_dict_from_model(first))
 
-        firsts = Track.objects.filter(
-                genre__in=self.genres,
-                language__in=self.languages,
-                is_explict__in=self.is_explict,
-                duration__lt=self.max_duration,
-            ).order_by('?')
-
-        for model in firsts:
-            while len(self.next_dicts) > 10:
-                time.sleep(1)
-            try:
-                self.next_dicts.append(self.get_dict_from_model(model))
-            except:
-                continue
-
-        artists = set()
-        for g in self.genres:
-            for lang in self.languages:
-                for a in Model.predict_artists(g, lang):
-                    artists.add(a)
-        for i in artists:
-            print(i.encode('utf-8'))
+        artists = Model.predict_unpopular_artists(self.genres, self.languages, top_n=7)
 
         predicted_tracks = Track.objects.filter(
             artist__in=artists,
@@ -70,22 +49,26 @@ class Wave:
             duration__lt=self.max_duration
         )
 
+        c = 0
         for model in predicted_tracks:
             while len(self.next_dicts) > 10:
                 time.sleep(1)
+            c += 1
             try:
                 self.next_dicts.append(self.get_dict_from_model(model))
-            except:
+            except Exception as e:
+                print(e)
                 continue
 
-        print('END PREDICTED ')
+        print('END PREDICTED ', c)
 
         other_tracks = Track.objects.filter(
             genre__in=self.genres,
             language__in=self.languages,
             is_explict__in=self.is_explict,
             duration__lt=self.max_duration
-        )
+        ).order_by('?')
+        c = 0
         for model in other_tracks:
             while len(self.next_dicts) > 10:
                 time.sleep(1)
@@ -93,8 +76,9 @@ class Wave:
                 self.next_dicts.append(self.get_dict_from_model(model))
             except:
                 continue
+            c += 1
 
-        print('END OTHER ')
+        print('END OTHER ', c)
 
     def next(self):
         while len(self.next_dicts) == 0:

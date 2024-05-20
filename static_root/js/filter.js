@@ -62,7 +62,6 @@ $(document).ready(function () {
                 filters: AllSelectedOptions,
                 time: selectedTime,
                 profanity: excludeProfanity,
-                exclude_restricted: excludeRestricted
             }),
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));

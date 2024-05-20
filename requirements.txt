@@ -15,6 +15,7 @@ django-sass-processor
 
 yandex_music
 
-undetected-chromedriver
+undetected-chrome driver
 pandas
 scikit-learn
+torch

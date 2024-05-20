@@ -37,12 +37,16 @@ def apply_filters(request):
     if not is_token_exists:
         token = uuid.uuid4()
     data = json.loads(request.body)
-    pprint(data)
     filters = data.get('filters')
     genres = []
     languages = ['ru', 'en']
     is_explict = data.get('profanity')
-    duration = 5 * 60 * 1000  #int(data.get('time'))
+    duration = 100 * 60 * 60 * 1000
+    try:
+        duration = int(data.get('time')) * 1000
+    except:
+        pass
+
     for filter in filters:
         filter_type = filter.get('filter')
         if filter_type == 'Жанры':
@@ -53,23 +57,37 @@ def apply_filters(request):
         elif filter_type == 'Язык':
             languages_dicts = filter.get('selected')
             languages_filter = [translate_lang[g.get('name')] for g in languages_dicts]
-            if len(languages_filter) != 0:
-                languages = languages_filter
+            if len(languages_filter) == 0 or len(languages_filter) == 2:
+                languages = all_languages.copy()
+            elif languages_filter[0] == 'ru':
+                languages = ru_languages.copy()
+            elif languages_filter[0] == 'en':
+                languages = en_languages.copy()
 
     all_genres = set()
     if not genres:
         for li in translate_genre.values():
             all_genres.update(li)
         genres = list(all_genres)
-    print(all_genres)
+
 
     print(genres)
     print(languages)
+    print(is_explict)
+    print(duration)
     users_waves[token] = wave.Wave(token, genres, languages, duration, is_explict)
 
     response = HttpResponse(status=status.HTTP_200_OK)
     response.set_cookie('user-token', token)
     return response
+
+
+all_languages = ['cy', 'he', 'fa', 'nl', 'ca', 'ko', 'en', 'sq', 'bg', 'fr', 'pt', 'zh-cn', 'mk', 'fi', 'es', 'ja', 'no', 'id', 'sl', 'de', 'tl', 'hr', 'it', 'ro', 'so', 'th', 'hu', 'zh-tw', 'cs', 'af', 'el', 'sv', 'uk', 'ar', 'pl', 'vi', 'ru', 'sw']
+
+en_languages = all_languages.copy()
+en_languages.remove('ru')
+
+ru_languages = ['ru']
 
 
 translate_lang = {
@@ -85,7 +103,7 @@ translate_genre = {
     "кантри": ['country', 'local-indie'],
     "классика": ['classical', 'classicalmasterpieces'],
     "этническая музыка": ['african', 'arabicpop', 'reggae'],
-    "рок": ['israelirock', 'rock', 'rusrock', 'hardrock', 'folkrock'],
+    "рок": ['rock', 'rusrock', 'hardrock', 'folkrock'],
     "рэп": ['rap', 'foreignrap', 'rusrap'],
     "ска": ['ska'],
     "техно": ['newwave', 'prog', 'industrial', 'rnb', 'electronics', 'newage', 'modern', 'alternative', 'trance'],
