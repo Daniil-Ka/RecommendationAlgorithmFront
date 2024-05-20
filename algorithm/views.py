@@ -1,6 +1,7 @@
 import asyncio
 import csv
 import datetime
+import itertools
 import json
 import random
 
@@ -8,6 +9,8 @@ import uuid
 from pprint import pprint
 
 from django.http import JsonResponse, HttpResponse
+from rest_framework import status
+
 from .music.serializers import TrackSerializer
 from .music.models import Track
 from .yandex_wave import wave
@@ -27,8 +30,8 @@ def next_track(request):
     response = JsonResponse(next_dict)
     return response
 
-def apply_filters(request):
 
+def apply_filters(request):
     token = request.COOKIES.get('user-token')
     is_token_exists = token is not None
     if not is_token_exists:
@@ -39,7 +42,7 @@ def apply_filters(request):
     genres = []
     languages = ['ru', 'en']
     is_explict = data.get('profanity')
-    duration = 5 * 60 * 1000 #int(data.get('time'))
+    duration = 5 * 60 * 1000  #int(data.get('time'))
     for filter in filters:
         filter_type = filter.get('filter')
         if filter_type == 'Жанры':
@@ -53,14 +56,25 @@ def apply_filters(request):
             if len(languages_filter) != 0:
                 languages = languages_filter
 
+    all_genres = set()
+    if not genres:
+        for li in translate_genre.values():
+            all_genres.update(li)
+        genres = list(all_genres)
+    print(all_genres)
+
     print(genres)
     print(languages)
     users_waves[token] = wave.Wave(token, genres, languages, duration, is_explict)
-    return HttpResponse('succes')
+
+    response = HttpResponse(status=status.HTTP_200_OK)
+    response.set_cookie('user-token', token)
+    return response
+
 
 translate_lang = {
     'Русский': 'ru',
-    'Английский': 'en'
+    'Иностранный': 'en'
 }
 
 translate_genre = {

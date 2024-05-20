@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 def generate_filters() -> dict:
     """ Создать заголовки и значения для фильтров """
 
-    titles = ["Жанры", "Язык", "Настроение", "На кого похоже"]
+    titles = ["Жанры", "Язык"]
 
     genres = [
         "блюз", "вокальная музыка", "гранж", "джаз", "инструментальная музыка", "кантри", "классика",
@@ -21,9 +21,8 @@ def generate_filters() -> dict:
         "summer", "dream", "haunting", "dark", "newyear", "autumn",
         "happy", "relaxed", "sentimental", "calm", "energetic", "epic"
     ]
-    lang = ['Русский', 'Английский']
 
-    filters = [genres, lang, moods, ['123']]
+    filters = [genres, moods]
 
     context = {
         'titles': titles,
@@ -62,25 +61,7 @@ class GenreFilterView(BaseFilterView):
 class LangFilterView(BaseFilterView):
     def filter(self, query: str) -> List[Dict]:
         languages = [
-            'Русский', 'Английский'
+            'Русский', 'Иностранный'
         ]
 
         return [{'id': i, 'name': element} for i, element in enumerate(languages) if query.lower() in element.lower()]
-
-
-class MoodFilterView(BaseFilterView):
-    def filter(self, query: str) -> List[Dict]:
-        moods = [
-            "агрессивное", "весеннее", "печальное", "зимнее", "красивое", "прохладное",
-            "летнее", "грезящее", "жуткое", "тёмное", "новогоднее", "осеннее",
-            "счастливое", "расслабленное", "сентиментальное", "спокойное", "энергичное", "эпическое"
-        ]
-
-        return [{'id': i, 'name': element} for i, element in enumerate(moods) if query.lower() in element.lower()]
-
-class SimilarFilterView(BaseFilterView):
-    def filter(self, query: str) -> List[Dict]:
-        # TODO
-        similar = ['TODO']
-
-        return [{'id': i, 'name': element} for i, element in enumerate(similar) if query.lower() in element.lower()]

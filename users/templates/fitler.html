@@ -33,8 +33,8 @@
 {% endfor %}
 
 <select id="time-select" class="filter-element">
-  <option value="<2">Менее 2 минут</option>
-  <option value="<5">Менее 5 минут</option>
+  <option value="120">Менее 2 минут</option>
+  <option value="300">Менее 5 минут</option>
   <option value="any">Не имеет значения</option>
 </select>
 
@@ -42,8 +42,6 @@
 
 <input type="checkbox" id="profanity" name="profanity" class="filter-element checkbox-input checkbox-custom">
 <label for="profanity" class="checkbox-custom-label">Ненормативная лексика</label><br>
-<input type="checkbox" id="exclude-restricted" name="exclude-restricted" class="filter-element checkbox-input checkbox-custom">
-<label for="exclude-restricted" class="checkbox-custom-label">Ограниченное содержание</label><br>
 
 <button id="submit-button" class="filter-element">Применить фильтры</button>
 

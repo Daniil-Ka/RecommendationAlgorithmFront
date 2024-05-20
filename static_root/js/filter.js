@@ -37,16 +37,11 @@ $(document).ready(function () {
 
     $("#search-input1").tokenInput('filters/genre', settings);
     $("#search-input2").tokenInput('filters/lang', settings);
-    $("#search-input3").tokenInput('filters/mood', settings);
-    $("#search-input4").tokenInput('filters/similar', settings);
 
     // отправка данных фильтра
     $('#submit-button').click(function () {
-
-
         const selectedTime = $("#time-select").val();
         const excludeProfanity = $("#profanity").is(":checked");
-        const excludeRestricted = $("#exclude-restricted").is(":checked");
 
         let AllSelectedOptions = []
         $('.filter').each(function (index) {

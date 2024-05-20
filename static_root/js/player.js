@@ -28,7 +28,7 @@ async function loadNextSong() {
         $('.playback_timeline_start-time .playback_timeline_end-time').text('Загрузка');
 
         // Отправляем GET запрос на сервер и дожидаемся ответа
-        const response = await fetch('/algorithm/next');
+        const response = await fetch('/algorithm/next/');
 
         // Обрабатываем JSON и получаем объект с полями
         const jsonData = await response.json();
@@ -57,7 +57,7 @@ async function loadPrevSong() {
 }
 
 function loadSong(songData) {
-    let image = 'url(' + songData.image + ')';
+    let image = 'url(' + songData.cover_url_200 + ')';
     let download_url = songData.download_url;
     let release_date = songData.release_date;
 
@@ -420,9 +420,6 @@ $('.item').click(function () {
 
     // Скрытие страницы куратора
     mainToPlaylist.to($('#curator'), 0.8, {display: 'none', opacity: 0, scale: 1.1, ease: Power2.easeInOut}, 0)
-
-    // mainToPlaylist.fromTo($('.curator_list'), 0.5, {opacity: 1, display: 'block', x: 0},
-    //                   {opacity: 0, x: 30, display: 'none', ease: Power2.easeInOut}, 0.5),
 });
 
 
