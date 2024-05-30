@@ -3,6 +3,8 @@ from typing import List, Tuple, Dict
 
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views import View
+from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -65,3 +67,15 @@ class LangFilterView(BaseFilterView):
         ]
 
         return [{'id': i, 'name': element} for i, element in enumerate(languages) if query.lower() in element.lower()]
+
+
+class AboutView(TemplateView):
+    template_name = 'about.html'
+
+
+class ForMusiciansView(TemplateView):
+    template_name = 'for_musicians.html'
+
+
+class DocsView(TemplateView):
+    template_name = 'docs.html'

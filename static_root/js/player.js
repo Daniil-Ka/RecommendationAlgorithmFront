@@ -141,7 +141,7 @@ $(".burger-wrapper").click(function () {
         $('.logo-text').css({'opacity': '0', 'display': 'none'});
     }
     // Если меню открыто и на странице куратора
-    else if ($('.nav').css("display") === "block" && $('#curator').css("display") === "block") {
+    else if ($('.nav').css("display") === "block" && $('#team').css("display") === "block") {
         // Скрываем темную область
         TweenMax.to(".dim", 0.5, {opacity: 0, display: 'none', ease: Power2.easeInOut});
         // Анимация закрытия навигационного меню
@@ -368,7 +368,7 @@ $('.item').hover(function () {
             $(this).children('.connect_btn').addClass('shadow'),
 
             // Плавное появление информации о треке
-            TweenMax.to($(this).children('.info'), 0.5, {opacity: 1, ease: Power2.easeInOut})
+            TweenMax.to($(this).children('.info').children('.desc'), 0.5, {opacity: 1, ease: Power2.easeInOut})
     },
 
     function () {
@@ -379,7 +379,7 @@ $('.item').hover(function () {
             $(this).children('.connect_btn').removeClass('shadow'),
 
             // Плавное исчезновение информации о треке
-            TweenMax.to($(this).children('.info'), 0.5, {opacity: 0, ease: Power2.easeInOut})
+            TweenMax.to($(this).children('.info').children('.desc'), 0.5, {opacity: 0, ease: Power2.easeInOut})
     });
 
 
@@ -399,15 +399,15 @@ $('.text-wrap .text').click(function () {
         homeToMain.to($('.wave-container'), 1, {yPercent: 30, ease: Power2.easeInOut}, 0),
 
         // Показ страницы куратора
-        $('#curator').css('display', 'block'),
+        $('#team').css('display', 'block'),
         // Анимация появления кнопки "назад"
         homeToMain.fromTo($('.back_btn'), 0.8, {x: 15},
             {display: 'flex', opacity: 1, x: 0, ease: Power2.easeInOut}, 1),
 
-        homeToMain.fromTo($('.curator_title_wrapper'), 0.8, {opacity: 0, x: 30},
+        homeToMain.fromTo($('.team_title_wrapper'), 0.8, {opacity: 0, x: 30},
             {opacity: 1, x: 0, ease: Power2.easeInOut}, 1),
 
-        homeToMain.fromTo($('.curator_list'), 0.8, {opacity: 0, display: 'none', x: 30},
+        homeToMain.fromTo($('.team_list'), 0.8, {opacity: 0, display: 'none', x: 30},
             {opacity: 1, x: 0, display: 'block', ease: Power2.easeInOut}, 1.2)
 
 });
@@ -419,18 +419,18 @@ $('.item').click(function () {
     var mainToPlaylist = new TimelineMax({});
 
     // Скрытие страницы куратора
-    mainToPlaylist.to($('#curator'), 0.8, {display: 'none', opacity: 0, scale: 1.1, ease: Power2.easeInOut}, 0)
+    mainToPlaylist.to($('#team'), 0.8, {display: 'none', opacity: 0, scale: 1.1, ease: Power2.easeInOut}, 0)
 });
 
 
 // ===== Обработчик клика на кнопке "назад" =====
 $('.back_btn').click(function () {
     // ===== Если на странице плейлиста (3), переход на главную (2)
-    if ($('#curator').css("display") === "none") {
+    if ($('#team').css("display") === "none") {
         var playlistToMain = new TimelineMax({});
 
         // Скрыть страницу плейлиста и показать главную страницу
-        playlistToMain.fromTo($('#curator'), 0.8, {display: 'none', opacity: 0, scale: 1.1},
+        playlistToMain.fromTo($('#team'), 0.8, {display: 'none', opacity: 0, scale: 1.1},
             {display: 'block', opacity: 1, scale: 1, ease: Power2.easeInOut}, 0)
     }
 
@@ -438,16 +438,16 @@ $('.back_btn').click(function () {
     else {
         var mainToHome = new TimelineMax({});
         // Скрыть элементы страницы куратора
-        mainToHome.fromTo($('.curator_title_wrapper'), 0.5, {opacity: 1, x: 0},
+        mainToHome.fromTo($('.team_title_wrapper'), 0.5, {opacity: 1, x: 0},
             {opacity: 0, x: 30, ease: Power2.easeInOut}, 0.2),
 
-            mainToHome.fromTo($('.curator_list'), 0.5, {opacity: 1, display: 'block', x: 0},
+            mainToHome.fromTo($('.team_list'), 0.5, {opacity: 1, display: 'block', x: 0},
                 {opacity: 0, x: 30, display: 'none', ease: Power2.easeInOut}, 0.5),
 
 
             mainToHome.to($('.back_btn'), 0.5, {display: 'none', opacity: 0, x: 15, ease: Power2.easeInOut}, 0.5),
 
-            mainToHome.to($('#curator'), 0, {display: 'none', ease: Power2.easeInOut}, 1),
+            mainToHome.to($('#team'), 0, {display: 'none', ease: Power2.easeInOut}, 1),
 
             // Поднять фон
             mainToHome.to($('.wave-container'), 1, {yPercent: 0, ease: Power2.easeInOut}, 1),

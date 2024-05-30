@@ -67,10 +67,11 @@ $(document).ready(function () {
                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
              },
             success: function(data) {
-            console.log("Ответ от сервера:", data);
+                console.log("Ответ от сервера:", data);
+                let _ = loadNextSong();
             },
             error: function() {
-            console.error("Error");
+                console.error("Error");
             }
         });
     });
