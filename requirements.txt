@@ -19,3 +19,4 @@ undetected-chromedriver
 pandas
 scikit-learn
 torch
+h5py
