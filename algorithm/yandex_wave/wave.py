@@ -41,7 +41,8 @@ class Wave:
         ).order_by('?').first()
         self.next_dicts.append(self.get_dict_from_model(first))
 
-        artists = Model.predict_unpopular_artists(self.genres, self.languages, top_n=7)
+        artists = Model.predict_unpopular_artists(self.genres, self.languages, top_n=15)
+        print(len(artists))
 
         predicted_tracks = Track.objects.filter(
             artist__in=artists,

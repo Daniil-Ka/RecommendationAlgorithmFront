@@ -24,10 +24,13 @@ def next_track(request):
     token = request.COOKIES.get('user-token')
     is_token_exists = token is not None
     if not is_token_exists:
-        return JsonResponse(status=402, data={'error': 'filters didnt applied'})
+        token = uuid.uuid4()
 
-    next_dict = users_waves[token].next()
+    wave = get_or_create_wave(token)
+    next_dict = wave.next()
     response = JsonResponse(next_dict)
+    if not is_token_exists:
+        response.set_cookie('user-token', token)
     return response
 
 
@@ -78,9 +81,22 @@ def apply_filters(request):
     users_waves[token] = wave.Wave(token, genres, languages, duration, is_explict)
 
     response = HttpResponse(status=status.HTTP_200_OK)
-    response.set_cookie('user-token', token)
+    if not is_token_exists:
+        response.set_cookie('user-token', token)
     return response
 
+
+def get_or_create_wave(token):
+    if token in users_waves:
+        return users_waves[token]
+
+    all_genres = set()
+    for li in translate_genre.values():
+        all_genres.update(li)
+    genres = list(all_genres)
+    new_wave = wave.Wave(token, genres, all_languages.copy(), 100 * 60 * 60 * 1000, True)
+    users_waves[token] = new_wave
+    return new_wave
 
 all_languages = ['cy', 'he', 'fa', 'nl', 'ca', 'ko', 'en', 'sq', 'bg', 'fr', 'pt', 'zh-cn', 'mk', 'fi', 'es', 'ja', 'no', 'id', 'sl', 'de', 'tl', 'hr', 'it', 'ro', 'so', 'th', 'hu', 'zh-tw', 'cs', 'af', 'el', 'sv', 'uk', 'ar', 'pl', 'vi', 'ru', 'sw']
 
