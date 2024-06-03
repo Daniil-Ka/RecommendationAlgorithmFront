@@ -126,7 +126,7 @@ function updatePrevButtonState() {
 updatePrevButtonState();
 
 // ===== Открытие навигационного меню =====
-$(".burger-wrapper").click(function () {
+$(".header").click(function () {
     // Если меню не открыто
     if ($('.nav').css("display") === "none") {
         // Показываем темную область
@@ -410,16 +410,6 @@ $('.text-wrap .text').click(function () {
         homeToMain.fromTo($('.team_list'), 0.8, {opacity: 0, display: 'none', x: 30},
             {opacity: 1, x: 0, display: 'block', ease: Power2.easeInOut}, 1.2)
 
-});
-
-
-// ===== Переход со страницы куратора на страницу плейлиста  =====
-// ===== Активация элемента списка =====
-$('.item').click(function () {
-    var mainToPlaylist = new TimelineMax({});
-
-    // Скрытие страницы куратора
-    mainToPlaylist.to($('#team'), 0.8, {display: 'none', opacity: 0, scale: 1.1, ease: Power2.easeInOut}, 0)
 });
 
 
