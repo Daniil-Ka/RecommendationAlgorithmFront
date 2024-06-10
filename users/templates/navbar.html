@@ -2,7 +2,7 @@
     <div class="burger-wrapper">
         <div class="burger"></div>
     </div>
-    <div class="logo-text">Рекомендательный алгоритм</div>
+    <div class="logo-text">{% firstof logo_text "Рекомендательный алгоритм" %}</div>
 </div>
 
 <div class="nav">
@@ -13,6 +13,6 @@
     <div class="nav_divider"></div>
     <ul class="nav_sub">
         <li><a class="nav_link" href="/about/">О нас</a></li>
-        <li><a class="nav_link" href="/docs/">Документация</a></li>
+        <li><a class="nav_link" href="/history/">История</a></li>
     </ul>
 </div>

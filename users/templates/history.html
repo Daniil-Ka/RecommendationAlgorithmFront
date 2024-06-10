@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>История</title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/filter.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+
+        <script src="{% static 'js/jquery.js' %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TimelineMax.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+        <link rel="stylesheet" href="{% static 'css/checkbox.css' %}">
+
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+
+        <script src="{% static 'js/playlist.js' %}"></script>
+        <script src="{% static 'js/history.js' %}"></script>
+        <script>
+            $(document).ready(function () {
+                // ===== Открытие навигационного меню =====
+                $(".header").click(function () {
+                    // Если меню не открыто
+                    if ($('.nav').css("display") === "none") {
+                        // Показываем темную область
+                        TweenMax.to(".dim", 0.5, {opacity: 1, display: 'block', ease: Power2.easeInOut});
+                        // Анимация открытия навигационного меню
+                        TweenMax.fromTo(".nav", 0.5, {xPercent: -100},
+                            {xPercent: 0, display: 'block', ease: Expo.easeOut});
+                        // Плавное появление пунктов меню
+                        TweenMax.staggerFrom('.nav li', 0.5, {opacity: 0, y: 20, ease: Power2.easeInOut}, 0.1);
+
+                        // Скрываем логотип
+                        $('.logo-text').css({'opacity': '0', 'display': 'none'});
+                    }
+                    // Если меню открыто и на странице куратора
+                    else if ($('.nav').css("display") === "block" && $('#team').css("display") === "block") {
+                        // Скрываем темную область
+                        TweenMax.to(".dim", 0.5, {opacity: 0, display: 'none', ease: Power2.easeInOut});
+                        // Анимация закрытия навигационного меню
+                        TweenMax.to(".nav", 0.5, {xPercent: -100, display: 'none', ease: Expo.easeOut});
+                        // $('.logo-text').css({'opacity': '1', 'display': 'block'});
+                    } else {
+                        // Скрываем темную область
+                        TweenMax.to(".dim", 0.5, {opacity: 0, display: 'none', ease: Power2.easeInOut});
+                        // Анимация закрытия навигационного меню
+                        TweenMax.to(".nav", 0.5, {xPercent: -100, display: 'none', ease: Expo.easeOut});
+                        // Показываем логотип
+                        $('.logo-text').css({'opacity': '1', 'display': 'block'});
+                    }
+                });
+
+                let $historyList = $('.history-list');
+
+                fullSongsHistory.forEach((jsonData) => {
+                    let image = 'url(' + jsonData.cover_url_200 + ')';
+                    const $element = createRecommendationComponent(jsonData.title, jsonData.artist);
+                    $element.find('.recommendations_thumb').css('background-image', image);
+                    $historyList.append($element);
+                })
+
+                const rotateList = (direction) => {
+                    const $items = $('.recommendations_info_wrapper');
+                    const newIndex = direction === 'next' ? activeIndex + 1 : activeIndex - 1;
+
+                    // Ограничиваем значение newIndex от 0 до (длины списка - 1)
+                    activeIndex = Math.max(0, Math.min(newIndex, $items.length - 1));
+
+                    updateList(); // Обновляем список
+                };
+
+                const scrollToActive = () => {
+                    const $activeItem = $('.recommendations_info_wrapper.active');
+                    const containerHeight = $historyList.height();
+                    const itemHeight = $activeItem.outerHeight(true);
+                    const scrollPosition = $activeItem.position().top - containerHeight / 2 + itemHeight / 2;
+                    const windowHeight = $(window).height();
+                    console.log(-scrollPosition + windowHeight / 2)
+                    $historyList.stop().animate({top: -scrollPosition + windowHeight / 2}, 500);
+                };
+
+                const updateList = () => {
+                    const hideDelta = 4; // а каком удалее начинаем скрывать элементы
+                    const $items = $('.recommendations_info_wrapper');
+                    $items.removeClass('active hidden half-hidden');
+                    $items.eq(activeIndex).addClass('active');
+
+                    // Управляем классом 'hidden' и 'half-hidden' для элементов, находящихся близко к краю
+                    $items.each(function(index) {
+                        if (index < activeIndex - hideDelta || index > activeIndex + hideDelta) {
+                            $(this).addClass('hidden');
+                        } else if (index === activeIndex - hideDelta || index === activeIndex + hideDelta) {
+                            $(this).addClass('half-hidden');
+                        }
+                    });
+                    scrollToActive();
+                };
+
+                activeIndex = fullSongsHistory.length - 1;
+                updateList();
+
+                $(document).keydown(function(event) {
+                    console.log(event)
+                    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+                        rotateList('next');
+                    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+                        rotateList('prev');
+                    }
+                });
+
+                let isScrolling = false;
+                $(document).on('wheel', function(event) {
+                    if (!isScrolling) { // Проверяем, не выполняется ли уже прокрутка
+                        isScrolling = true; // Устанавливаем флаг, что началась прокрутка
+                        if (event.originalEvent.deltaY > 0) {
+                            rotateList('next');
+                        } else if (event.originalEvent.deltaY < 0) {
+                            rotateList('prev');
+                        }
+                        setTimeout(function() { isScrolling = false;}, 30); // Сбрасываем после прокрутки
+                    }
+                });
+            })
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <!-- Wave bg-->
+            <div class="wave-container">
+                <div class="wave -one"></div>
+                <div class="wave -two"></div>
+                <div class="wave -three"></div>
+            </div>
+
+            {% include 'navbar.html' with logo_text="История прослушиваний" %}
+
+            <div class="dim"></div>
+
+            <div class="history-list"></div>
+        </div>
+    </body>
+</html>

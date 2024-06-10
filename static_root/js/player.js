@@ -3,7 +3,20 @@ var songsHistory = [];
 var currentTrackIndex = -1; // -1 для обозначения того, что текущего трека нет
 var isLoadingTrack = false; // Флаг для указания на процесс загрузки трека
 
+function hidePlayText() {
+    let $textWrap = $('.text-wrap')
+    if ($textWrap.css('display') !== 'none') {
+        TweenMax.to($textWrap, 0.5, {
+            opacity: 0, y: -20, ease: Power2.easeInOut,
+            onComplete: function () {
+                $('.text-wrap').css('display', 'none');
+            }
+        });
+    }
+}
+
 function startPlay() {
+
     if (audioPlayer.duration > 0 && !audioPlayer.paused) {
         // уже играет
     }
@@ -11,9 +24,15 @@ function startPlay() {
         // Анимация скрытия кнопки play
         TweenMax.to($('.btn-play'), 0.2, {x: 20, opacity: 0, scale: 0.3, display: 'none', ease: Power2.easeInOut});
         // Анимация появления кнопки pause
-        TweenMax.fromTo($('.btn-pause'), 0.2, {x: -20, opacity: 0, scale: 0.3, display: 'none'},
-            {x: 0, opacity: 1, scale: 1, display: 'block', ease: Power2.easeInOut});
+
+        const $btnPause = $('.btn-pause')
+        if ($btnPause.css('display') === 'none') {
+            TweenMax.fromTo($btnPause, 0.2, {x: -20, opacity: 0, scale: 0.3, display: 'none'},
+                {x: 0, opacity: 1, scale: 1, display: 'block', ease: Power2.easeInOut});
+        }
     }
+
+    hidePlayText();
 
     audioPlayer.play();
     console.log('play');
@@ -33,7 +52,11 @@ async function loadNextSong() {
         // Обрабатываем JSON и получаем объект с полями
         const jsonData = await response.json();
         songsHistory.push(jsonData);
+        AddSongToHistory(jsonData);
+
+        let image = 'url(' + jsonData.cover_url_200 + ')';
         currentTrackIndex = songsHistory.length - 1; // Обновляем индекс текущего трека
+        addRecommendation(jsonData.title, jsonData.artist, image, $list);
         loadSong(jsonData);
         updatePrevButtonState(); // Вызываем функцию для обновления состояния кнопки назад
     } catch (error) {
@@ -57,19 +80,24 @@ async function loadPrevSong() {
 }
 
 function loadSong(songData) {
-    let image = 'url(' + songData.cover_url_200 + ')';
-    let download_url = songData.download_url;
-    let release_date = songData.release_date;
+    try {
+        let image = 'url(' + songData.cover_url_200 + ')';
+        let download_url = songData.download_url;
+        let release_date = songData.release_date;
 
-    $('.title').text(songData.title)
-    $('.artist').text(songData.artist)
-    $('.playback_thumb').css('background-image', image);
-    $('.playback_blur').css('background-image', image);
-    $('.thumb').css('background-image', image);
+        $('.title').text(songData.title)
+        $('.artist').text(songData.artist)
+        $('.playback_thumb').css('background-image', image);
+        $('.playback_blur').css('background-image', image);
+        $('.thumb').css('background-image', image);
 
-    audioPlayer.src = download_url;
-    audioPlayer.currentTime = 0;
-    startPlay();
+        audioPlayer.src = download_url;
+        audioPlayer.currentTime = 0;
+        startPlay();
+    }
+    catch (e) {
+        console.log('loadSongE')
+    }
 }
 
 $('.btn-play').click(function () {
@@ -90,15 +118,15 @@ $('.btn-pause').click(function () {
     audioPlayer.pause()
 });
 
-$('.btn-prev').click(function () {
+function prevTrack() {
     loadPrevSong();
-
+    rotateList('prev');
     TweenMax.to($(this), 0.1, {scale: 0.8, ease: Power2.easeInOut});
     // Возвращаем кнопку в исходный размер
     TweenMax.to($(this), 0.1, {delay: 0.1, scale: 1, ease: Power2.easeInOut});
-});
+}
 
-$('.btn-next').on('click', async function() {
+async function nextTrack() {
     if (isLoadingTrack) return; // Если уже идет загрузка трека, выходим
 
     if (currentTrackIndex < songsHistory.length - 1) {
@@ -108,11 +136,56 @@ $('.btn-next').on('click', async function() {
         await loadNextSong();
     }
 
+    rotateList('next');
     updatePrevButtonState();
+
     TweenMax.to($(this), 0.15, {scale: 0.7});
     // Возвращаем кнопку в исходный размер
     TweenMax.to($(this), 0.15, {delay: 0.1, scale: 1});
+}
+
+$('.btn-prev').click(prevTrack);
+
+$('.btn-next').on('click', nextTrack);
+
+$(document).keydown(function(event) {
+    if (event.key === ' ') {
+        event.preventDefault(); // предотвращает прокрутку страницы при нажатии пробела
+        if (audioPlayer.paused) {
+            if (currentTrackIndex === -1) {
+                loadNextSong();
+            } else {
+                startPlay();
+            }
+        } else {
+            // Анимация скрытия кнопки pause
+            TweenMax.to($('.btn-pause'), 0.2, {x: 20, opacity: 0, display: 'none', scale: 0.3, ease: Power2.easeInOut});
+            // Анимация появления кнопки play
+            TweenMax.fromTo($('.btn-play'), 0.2, {x: -20, opacity: 0, scale: 0.3, display: 'none'},
+                {x: 0, opacity: 1, display: 'block', scale: 1, ease: Power2.easeInOut});
+
+            audioPlayer.pause();
+        }
+    } else if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+        let _ = nextTrack();
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+        prevTrack();
+    }
 });
+
+let isScrolling = false;
+$(document).on('wheel', function(event) {
+    if (!isScrolling) { // Проверяем, не выполняется ли уже прокрутка
+        isScrolling = true; // Устанавливаем флаг, что началась прокрутка
+        if (event.originalEvent.deltaY > 0) {
+            let _ = nextTrack();
+        } else if (event.originalEvent.deltaY < 0) {
+            prevTrack();
+        }
+        setTimeout(function() { isScrolling = false;}, 30); // Сбрасываем после прокрутки
+    }
+});
+
 
 function updatePrevButtonState() {
     if (currentTrackIndex > 0) {
@@ -155,7 +228,6 @@ $(".header").click(function () {
         // Показываем логотип
         $('.logo-text').css({'opacity': '1', 'display': 'block'});
     }
-
 });
 
 
@@ -383,33 +455,19 @@ $('.item').hover(function () {
     });
 
 
-// ===== Переход с главной страницы на страницу куратора  =====
+// ===== Переход с главной страницы на страницу куратора =====
 // ===== Активация главной кнопки плеера =====
 
 $('.text-wrap .text').click(function () {
-
     var homeToMain = new TimelineMax({});
 
-    // Скрытие логотипа
-    $('.logo-text').css('display', 'none'),
-        // Анимация скрытия обертки главной кнопки плеера
-        homeToMain.to($('.text-wrap'), 0.5, {display: 'none', opacity: 0, y: -20, ease: Power2.easeInOut}, 0),
+    // Анимация скрытия обертки главной кнопки плеера
+    homeToMain.to($('.text-wrap'), 0.5, {display: 'none', opacity: 0, y: -20, ease: Power2.easeInOut}, 0);
 
-        // Анимация опускания фона
-        homeToMain.to($('.wave-container'), 1, {yPercent: 30, ease: Power2.easeInOut}, 0),
+    // Анимация опускания фона
+    homeToMain.to($('.wave-container'), 1, {yPercent: 30, ease: Power2.easeInOut}, 0);
 
-        // Показ страницы куратора
-        $('#team').css('display', 'block'),
-        // Анимация появления кнопки "назад"
-        homeToMain.fromTo($('.back_btn'), 0.8, {x: 15},
-            {display: 'flex', opacity: 1, x: 0, ease: Power2.easeInOut}, 1),
-
-        homeToMain.fromTo($('.team_title_wrapper'), 0.8, {opacity: 0, x: 30},
-            {opacity: 1, x: 0, ease: Power2.easeInOut}, 1),
-
-        homeToMain.fromTo($('.team_list'), 0.8, {opacity: 0, display: 'none', x: 30},
-            {opacity: 1, x: 0, display: 'block', ease: Power2.easeInOut}, 1.2)
-
+    homeToMain.add(nextTrack);
 });
 
 

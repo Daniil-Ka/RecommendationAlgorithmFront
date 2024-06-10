@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('for_musicians/', users.views.ForMusiciansView.as_view()),
     path('about/', users.views.AboutView.as_view()),
-    path('docs/', users.views.DocsView.as_view()),
+    path('history/', users.views.HistoryView.as_view()),
 
     path('', RedirectView.as_view(url='/users/', permanent=True))
 ]

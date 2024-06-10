@@ -77,5 +77,5 @@ class ForMusiciansView(TemplateView):
     template_name = 'for_musicians.html'
 
 
-class DocsView(TemplateView):
-    template_name = 'docs.html'
+class HistoryView(TemplateView):
+    template_name = 'history.html'
