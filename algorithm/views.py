@@ -9,6 +9,7 @@ import uuid
 from pprint import pprint
 
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 
 from .music.serializers import TrackSerializer
@@ -34,6 +35,7 @@ def next_track(request):
     return response
 
 
+@csrf_exempt
 def apply_filters(request):
     token = request.COOKIES.get('user-token')
     is_token_exists = token is not None
