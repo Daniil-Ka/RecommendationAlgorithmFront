@@ -64,8 +64,13 @@ $(document).ready(function () {
                 profanity: excludeProfanity,
             }),
             beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-             },
+                const csrfToken = getCSRFTokenFromMeta();
+                if (csrfToken) {
+                    xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                } else {
+                    console.error("CSRF token not found!");
+                }
+            },
             success: function(data) {
                 console.log("Ответ от сервера:", data);
                 let _ = loadNextSong();
@@ -76,6 +81,10 @@ $(document).ready(function () {
         });
     });
 });
+
+function getCSRFTokenFromMeta() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
 
 function getCookie(name) {
 	var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
